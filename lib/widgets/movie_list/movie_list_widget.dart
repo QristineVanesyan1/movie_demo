@@ -12,10 +12,13 @@ class _MovieListWidgetState extends State<MovieListWidget> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image(
-          image: AssetImage('images/squid_game.jpg'),
-          height: 100,
-          width: 100,
+        ColoredBox(
+          color: Colors.blue,
+          child: Image(
+            image: AssetImage('images/icon-send.png'),
+            height: 100,
+            width: 100,
+          ),
         ),
         Expanded(
             child: ListView.builder(
