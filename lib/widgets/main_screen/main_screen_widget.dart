@@ -33,7 +33,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
           BottomNavigationBarItem(icon: Icon(Icons.tv), label: 'Shows'),
         ],
       ),
-      body: Center(child: a[_selectedTab]),
+      body: IndexedStack(index: _selectedTab, children: a),
     );
   }
 }
