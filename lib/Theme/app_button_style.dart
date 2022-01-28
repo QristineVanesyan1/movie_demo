@@ -7,15 +7,16 @@ abstract class AppButtonStyle {
           MaterialStateProperty.all(AppColors.mainDarkBlue),
       foregroundColor: MaterialStateProperty.all(Colors.white),
       textStyle: MaterialStateProperty.all(
-          TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
+          const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w700)),
       padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 15, vertical: 8)));
+          const EdgeInsets.symmetric(horizontal: 15, vertical: 8)));
 
   static final linkButton = ButtonStyle(
       foregroundColor:
           MaterialStateProperty.all(const Color.fromRGBO(1, 180, 228, 1)),
       textStyle: MaterialStateProperty.all(
-          TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400)),
+          const TextStyle(fontSize: 16.0, fontWeight: FontWeight.w400)),
       padding: MaterialStateProperty.all(
-          EdgeInsets.symmetric(horizontal: 15, vertical: 8)));
+          const EdgeInsets.symmetric(horizontal: 15, vertical: 8)));
+
 }

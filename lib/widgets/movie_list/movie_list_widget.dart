@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:move_demo/Theme/images.dart';
+import 'package:move_demo/navigation/main_navigation.dart';
 
 class Movie {
   Movie(
-      {required this.imageName,
+      {required this.id,
+      required this.imageName,
       required this.title,
       required this.time,
       required this.description});
-
+  final int id;
   final String imageName;
   final String title;
   final String time;
@@ -24,31 +26,37 @@ class MovieListWidget extends StatefulWidget {
 class _MovieListWidgetState extends State<MovieListWidget> {
   final _movies = [
     Movie(
+        id: 0,
         imageName: 'imageName1',
         title: 'title1',
         time: 'time1',
         description: 'description1'),
     Movie(
+        id: 1,
         imageName: 'imageName2',
         title: 'title2',
         time: 'time2',
         description: 'description2'),
     Movie(
+        id: 2,
         imageName: 'imageName3',
         title: 'title3',
         time: 'time3',
         description: 'description3'),
     Movie(
+        id: 3,
         imageName: 'imageName4',
         title: 'title4',
         time: 'time4',
         description: 'description4'),
     Movie(
+        id: 4,
         imageName: 'imageName5',
         title: 'title5',
         time: 'time5',
         description: 'description5'),
     Movie(
+        id: 5,
         imageName: 'imageName6',
         title: 'title6',
         time: 'time6',
@@ -72,7 +80,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
   @override
   void initState() {
     super.initState();
-    
+
     _filteredMovies = _movies;
     _controller.addListener(_searchMovies);
   }
@@ -155,9 +163,7 @@ class _MovieListWidgetState extends State<MovieListWidget> {
                       color: Colors.transparent,
                       child: InkWell(
                         borderRadius: BorderRadius.circular(5),
-                        onTap: () {
-                          print('object');
-                        },
+                        onTap: () => _onMovieTap(index),
                       ),
                     )
                   ],
@@ -177,5 +183,11 @@ class _MovieListWidgetState extends State<MovieListWidget> {
         )
       ],
     );
+  }
+
+  void _onMovieTap(int index) {
+    final id = _movies[index].id;
+    Navigator.of(context)
+        .pushNamed(MainNavigationRouteNames.movieDetails, arguments: id);
   }
 }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:move_demo/Theme/app_button_style.dart';
-import 'package:move_demo/widgets/main_screen/main_screen_widget.dart';
+import 'package:move_demo/library/widgets/notifier_provider/notifier_provider.dart';
+import 'package:move_demo/widgets/auth/auth_model.dart';
 
 class AuthWidget extends StatefulWidget {
   const AuthWidget({Key? key}) : super(key: key);
@@ -18,7 +18,7 @@ class _AuthWidgetState extends State<AuthWidget> {
           title: const Text('Login to your account'),
         ),
         body: ListView(
-          children: [_HeaderWidget(), _FormWidget()],
+          children: [_HeaderWidget(), FormWidget()],
         ));
   }
 }
@@ -64,31 +64,24 @@ class __HeaderWidgetState extends State<_HeaderWidget> {
   }
 }
 
-class _FormWidget extends StatefulWidget {
-  const _FormWidget({Key? key}) : super(key: key);
+class FormWidget extends StatelessWidget {
+  const FormWidget({Key? key}) : super(key: key);
 
-  @override
-  __FormWidgetState createState() => __FormWidgetState();
-}
-
-class __FormWidgetState extends State<_FormWidget> {
-  String? str = null;
-  final _loginController = TextEditingController();
-  final _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
- 
+    String? str = null;
+    final _authModel = CustomNotifyProvider.read<AuthModel>(context);
 
     var a = const TextStyle(color: Color(0xFF212529), fontSize: 16.0);
-    var textFieldDecorator = InputDecoration(
+    var textFieldDecorator = const InputDecoration(
         isCollapsed: true,
         border: OutlineInputBorder(),
         contentPadding: EdgeInsets.all(10));
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (str != null)
-          Text(str!, style: TextStyle(color: Colors.red, fontSize: 16.0)),
+        //TODO
+        _ErrorMessageWidget(),
         Text(
           'Username',
           style: a,
@@ -96,12 +89,13 @@ class __FormWidgetState extends State<_FormWidget> {
         Padding(
             padding: const EdgeInsets.only(top: 5, bottom: 20),
             child: TextField(
-                controller: _loginController, decoration: textFieldDecorator)),
+                controller: _authModel?.loginController,
+                decoration: textFieldDecorator)),
         Text('Password', style: a),
         Padding(
           padding: const EdgeInsets.only(top: 5.0),
           child: TextField(
-            controller: _passwordController,
+            controller: _authModel?.passwordController,
             decoration: textFieldDecorator,
             obscureText: true,
           ),
@@ -110,18 +104,10 @@ class __FormWidgetState extends State<_FormWidget> {
           padding: const EdgeInsets.only(top: 25.0),
           child: Row(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 30.0),
-                child: TextButton(
-                    onPressed: _auth,
-                    child: Text(
-                      'log in',
-                    ),
-                    style: AppButtonStyle.a),
-              ),
+              _LoginWidget(),
               TextButton(
                   onPressed: () {},
-                  child: Text(
+                  child: const Text(
                     'Reset Button',
                   ),
                   style: AppButtonStyle.linkButton)
@@ -131,17 +117,38 @@ class __FormWidgetState extends State<_FormWidget> {
       ],
     );
   }
+}
 
-  void _auth() {
-    final login = _loginController.text;
-    final password = _passwordController.text;
-    if (login == 'admin' && password == 'admin') {
-      print('OK');
-      str = null;
-      Navigator.of(context).pushReplacementNamed('/main_screen');
-    } else {
-      str = 'asdfsdfafsd';
-    }
-    setState(() {});
+class _LoginWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final _authModel = CustomNotifyProvider.of<AuthModel>(context);
+
+    final _onPressed = (_authModel?.canStartAuth == true)
+        ? () => _authModel?.auth(context)
+        : null;
+    final child = _authModel!.isAuthProgress
+        ? const CircularProgressIndicator()
+        : const Text('Log in');
+    return Padding(
+      padding: const EdgeInsets.only(right: 30.0),
+      child: TextButton(
+          onPressed: _onPressed, child: child, style: AppButtonStyle.a),
+    );
+  }
+}
+
+class _ErrorMessageWidget extends StatelessWidget {
+  const _ErrorMessageWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final errorMessage = CustomNotifyProvider.of<AuthModel>(context)?.errorMessage;
+    if (errorMessage == null) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 20.0),
+      child: Text(errorMessage,
+          style: const TextStyle(color: Colors.red, fontSize: 16.0)),
+    );
   }
 }
